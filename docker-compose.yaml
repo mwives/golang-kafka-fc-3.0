@@ -17,7 +17,7 @@ services:
 
   kafka:
     image: bitnami/kafka:latest
-    container_name: golang-kafka-kafka
+    container_name: golang-kafka
     restart: on-failure
     ports:
       - 9092:9092

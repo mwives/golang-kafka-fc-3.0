@@ -1,0 +1,32 @@
+services:
+  app:
+    build: .
+    container_name: golang-kafka-app
+    volumes:
+      - .:/app
+    ports:
+      - '8080:8080'
+
+  zookeeper:
+    image: bitnami/zookeeper:latest
+    container_name: golang-kafka-zookeeper
+    ports:
+      - 2181:2181
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+
+  kafka:
+    image: bitnami/kafka:latest
+    container_name: golang-kafka-kafka
+    restart: on-failure
+    ports:
+      - 9092:9092
+    environment:
+      - KAFKA_CFG_BROKER_ID=1
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_CFG_NUM_PARTITIONS=3
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    depends_on:
+      - zookeeper
